@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, Min, Max } from 'class-validator';
+import { IsInt, IsOptional, Min, Max } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
 export class QueryPlatesInputDTO {
@@ -9,14 +9,15 @@ export class QueryPlatesInputDTO {
   @IsOptional()
   @Transform(({ value }) => {
     if (!value) {
-      return 5;
+      return 1;
     }
     return value;
   })
   @Type(() => Number)
+  @IsInt()
   @Min(1)
   @Max(100)
-  PageInfo: number = 5;
+  PageInfo: number = 1;
 
   @ApiPropertyOptional({
     description: 'Кол-во автомобилей',
@@ -29,6 +30,7 @@ export class QueryPlatesInputDTO {
     return value;
   })
   @Type(() => Number)
+  @IsInt()
   @Min(1)
   @Max(100)
   PlatesQuantity: number = 3;

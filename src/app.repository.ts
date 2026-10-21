@@ -24,10 +24,12 @@ export class AppRepository {
       const skip = Math.floor(NumPlates * (PagePlates - 1));
       const plates = await PlatesRepository.find({
         select: {
+          id: true,
           nameCar: true,
           WordPlates: true,
           NumPlates: true,
         },
+        order: { WordPlates: 'ASC', NumPlates: 'ASC' },
         skip: skip,
         take: NumPlates,
       });
@@ -60,13 +62,7 @@ export class AppRepository {
     const PlatesRepository = this.dataSourcePlates.getRepository(Plates);
     let total: number;
     try {
-      total = await PlatesRepository.count({
-        select: {
-          nameCar: true,
-          WordPlates: true,
-          NumPlates: true,
-        },
-      });
+      total = await PlatesRepository.count();
       const pages = Math.ceil(total / NumPlates);
       return {
         pageNum: PagePlates,

@@ -1,10 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiForbiddenResponse,
+  ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 export function DeletePlatesSwagger() {
@@ -14,11 +15,14 @@ export function DeletePlatesSwagger() {
     ApiOkResponse({
       description: 'Данные успешно удалены',
     }),
+    ApiBadRequestResponse({
+      description: 'Некорректные параметры запроса',
+    }),
     ApiNotFoundResponse({
       description: 'Не удалось удалить данные',
     }),
-    ApiForbiddenResponse({
-      description: 'Недостаточно прав доступа',
+    ApiUnauthorizedResponse({
+      description: 'Токен отсутствует или недействителен',
     }),
   );
 }

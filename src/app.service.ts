@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Plates } from './plates/plates.entity';
 import { Interlayer, InterlayersStatuses } from './model/interlayer';
 import { CreateNewPlatesDTO } from './dto/input/query-create-new-plates-info';
@@ -26,7 +26,7 @@ export class AppService {
       NumPlates,
     );
 
-    if (!plates.items) {
+    if (!plates.items.length) {
       this.logger.log('Номера не найдены');
       notice.addError('Номера не найдены', '', InterlayersStatuses.NOT_FOUND);
       return notice;
@@ -52,7 +52,10 @@ export class AppService {
       where: { WordPlates, NumPlates },
     });
     if (!plate) {
-      return { success: false, message: 'Запись не найдена' };
+      throw new NotFoundException({
+        success: false,
+        message: 'Запись не найдена',
+      });
     }
     await this.platesRepo.remove(plate);
     return { success: true, message: 'Запись успешно удалена' };

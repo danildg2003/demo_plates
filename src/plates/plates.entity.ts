@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class Plates {
   @ApiProperty()
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ApiProperty()
   @Column()
