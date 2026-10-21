@@ -7,8 +7,9 @@ export class QueryPlatesInputDTO {
     description: 'Страница',
   })
   @IsOptional()
-  @Transform(({ value }) => {
-    if (!value) {
+  // Значение по умолчанию только для пустого параметра: 0 и не-числа должны падать на валидации
+  @Transform(({ value, obj, key }) => {
+    if ((obj as Record<string, unknown>)[key] === '') {
       return 1;
     }
     return value;
@@ -23,8 +24,8 @@ export class QueryPlatesInputDTO {
     description: 'Кол-во автомобилей',
   })
   @IsOptional()
-  @Transform(({ value }) => {
-    if (!value) {
+  @Transform(({ value, obj, key }) => {
+    if ((obj as Record<string, unknown>)[key] === '') {
       return 3;
     }
     return value;
