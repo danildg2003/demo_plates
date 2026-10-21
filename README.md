@@ -1,7 +1,5 @@
 ## Project setup
 
-Node.js 20–24 (LTS). On Node 25 `jsonwebtoken` fails to load.
-
 ```bash
 $ npm install
 
