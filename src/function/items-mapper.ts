@@ -1,5 +1,5 @@
-import { Plates } from 'src/plates/plates.entity';
-import { PlatesDTO } from 'src/dto/output/plates.dto';
+import { Plates } from '../plates/plates.entity';
+import { PlatesDTO } from '../dto/output/plates.dto';
 
 export const itemsMapper = (platees: Plates): PlatesDTO => {
   return {

@@ -1,28 +1,46 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsDate,
+  IsInt,
+  IsOptional,
+  IsString,
+  Length,
+  Validate,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { LineValidation } from '../../common/validates/validate-line';
 
 export class CreateNewPlatesDTO {
   @ApiProperty({ example: 'Toyota', description: 'Марка машины' })
-  @IsOptional()
+  @IsString()
+  @Validate(LineValidation)
   nameCar: string;
 
   @ApiProperty({ example: 'ABC', description: 'Буквенная часть номера' })
-  @IsOptional()
+  @IsString()
+  @Length(1, 3)
+  @Validate(LineValidation)
   WordPlates: string;
 
-  @ApiProperty({ example: '123', description: 'Цифровая часть номера' })
-  @IsOptional()
+  @ApiProperty({ example: 123, description: 'Цифровая часть номера' })
+  @IsInt()
   NumPlates: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '2021-12-01 00:00:00.000 +0300',
     description: 'Дата начала действия',
   })
-  CreatedAt: Date;
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  CreatedAt?: Date;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '2029-12-01 00:00:00.000 +0300',
     description: 'Дата окончания действия',
   })
-  ValidUntil: Date;
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  ValidUntil?: Date;
 }

@@ -5,14 +5,11 @@ import { PlatesBaseDTO } from './dto/output/plate-base.dto';
 import { CreateNewPlatesDTO } from './dto/input/query-create-new-plates-info';
 import { DeletePlatesDTO } from './dto/input/delete-plates';
 import {
-  Param,
   Controller,
   Get,
   Query,
   UseGuards,
   Logger,
-  UsePipes,
-  ValidationPipe,
   Post,
   Body,
   HttpCode,
@@ -29,7 +26,6 @@ import { DeletePlatesSwagger } from './swagger/deleteCurrentPlates';
 export class AppController {
   private readonly logger = new Logger(AppController.name);
   constructor(private readonly appService: AppService) {}
-  @UsePipes(new ValidationPipe({ transform: true }))
 
   /**
    * Получить список номерных знаков
@@ -81,7 +77,7 @@ export class AppController {
     } catch (error) {
       throw new HttpException(
         { success: false, message: error.message },
-        HttpStatus.NOT_FOUND,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -94,7 +90,7 @@ export class AppController {
   @UseGuards(PlatesAccess)
   @Delete('delete/plates')
   @HttpCode(HttpStatus.OK)
-  async deletePlate(@Param() deletePlatesDto: DeletePlatesDTO) {
+  async deletePlate(@Query() deletePlatesDto: DeletePlatesDTO) {
     return this.appService.deletePlate(deletePlatesDto);
   }
 }

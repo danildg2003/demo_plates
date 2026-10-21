@@ -2,24 +2,30 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiForbiddenResponse,
+  ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { PlatesBaseDTO } from '../dto/output/plate-base.dto';
 
 export function CreatePlatesResultSwagger() {
   return applyDecorators(
-    ApiOperation({ summary: `Ввести данные о номере авто` }),
+    ApiOperation({ summary: `Получить список номерных знаков` }),
     ApiBearerAuth('Access Token'),
     ApiOkResponse({
       description: 'Информация найдена',
+      type: PlatesBaseDTO,
+    }),
+    ApiBadRequestResponse({
+      description: 'Некорректные параметры запроса',
     }),
     ApiNotFoundResponse({
       description: 'Информация не найдена',
     }),
-    ApiForbiddenResponse({
-      description: 'Недостаточно прав доступа',
+    ApiUnauthorizedResponse({
+      description: 'Токен отсутствует или недействителен',
     }),
   );
 }

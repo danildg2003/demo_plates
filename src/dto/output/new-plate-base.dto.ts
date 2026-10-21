@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class NewPlatesBaseDTO {
-  @ApiProperty({ example: '1234' })
+  @ApiProperty({ example: 10 })
   total: number;
 
-  @ApiProperty({ example: '1/2/3/4/5' })
+  @ApiProperty({ example: 4 })
   pages: number;
 
-  @ApiProperty({ example: '123' })
+  @ApiProperty({ example: 1 })
   pageNum: number;
 }

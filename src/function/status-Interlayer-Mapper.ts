@@ -1,4 +1,4 @@
-import { Interlayer, InterlayersStatuses } from 'src/model/interlayer';
+import { Interlayer, InterlayersStatuses } from '../model/interlayer';
 import {
   BadRequestException,
   ForbiddenException,

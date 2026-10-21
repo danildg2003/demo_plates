@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
 import { DataSource } from 'typeorm';
 import { Plates } from './plates/plates.entity';
-import { AuthController } from './auth/auth.controller';
 import { AppController } from './app.controller';
 import { PlatesAccess } from './guard/access-token-plates';
 import { AppService } from './app.service';
@@ -14,30 +12,25 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     TypeOrmModule.forFeature([Plates]),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5433,
-      username: 'user',
-      password: 'password',
-      database: 'postgres',
-      schema: 'plates',
-      entities: [Plates],
-      autoLoadEntities: true,
-    }),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
+    TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'), // Получаем ключ из .env
-        signOptions: { expiresIn: '1h' }, // Настройки токена
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('PLATES_HOST', 'localhost'),
+        port: Number(configService.get('PLATES_PORT', 5433)),
+        username: configService.getOrThrow<string>('PLATES_USER'),
+        password: configService.getOrThrow<string>('PLATES_PASSWORD'),
+        database: configService.get<string>('PLATES_DATABASE', 'postgres'),
+        schema: configService.get<string>('PLATES_SCHEMA', 'plates'),
+        entities: [Plates],
+        autoLoadEntities: true,
       }),
     }),
   ],
-  controllers: [AuthController, AppController],
+  controllers: [AppController],
   providers: [
     PlatesAccess,
     AppService,
@@ -45,8 +38,9 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: DatabaseEnum.plates,
       useFactory: (dataSource: DataSource) => dataSource,
+      inject: [DataSource],
     },
   ],
-  exports: [AppService, AppRepository, DatabaseEnum.plates, JwtModule],
+  exports: [AppService, AppRepository, DatabaseEnum.plates],
 })
 export class AppModule {}

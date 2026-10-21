@@ -1,24 +1,24 @@
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
   ApiOperation,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
 export function PutNewDataSwagger() {
   return applyDecorators(
     ApiOperation({ summary: `Записать новые данные` }),
     ApiBearerAuth('Access Token'),
-    ApiOkResponse({
+    ApiCreatedResponse({
       description: 'Данные успешно зарегистрированы',
     }),
-    ApiNotFoundResponse({
+    ApiBadRequestResponse({
       description: 'Не удалось зарегистрировать данные',
     }),
-    ApiForbiddenResponse({
-      description: 'Недостаточно прав доступа',
+    ApiUnauthorizedResponse({
+      description: 'Токен отсутствует или недействителен',
     }),
   );
 }
