@@ -11,7 +11,6 @@ export class AuthService {
     }
 
     const payload = { username };
-    console.log('JWT_SECRET при создании токена:', process.env.JWT_SECRET);
 
     return { access_token: this.jwtService.sign(payload) };
   }
