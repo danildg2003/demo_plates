@@ -1,7 +1,18 @@
 ## Project setup
 
+Node.js 20–24 (LTS). On Node 25 `jsonwebtoken` fails to load.
+
 ```bash
 $ npm install
+
+# fill in your own values (.env is not committed)
+$ cp .env.example .env
+
+# start PostgreSQL (schema from PLATES_SCHEMA is created on first start)
+$ docker compose up -d
+
+# create tables
+$ npm run migrations:run
 ```
 
 ## Compile and run the project
